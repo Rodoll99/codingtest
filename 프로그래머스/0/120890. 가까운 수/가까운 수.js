@@ -12,5 +12,6 @@ function solution(array, n) {
             // a에 Math.min 을 이용해 result에서 제일 작은 값을 할당시킴
         } 
     return array[result.indexOf(a)];
-    // array 의 result 배열의 a번째 인덱스를 적용시킴
+    // result 배열의 a값의 인덱스번호를 가져와 
+    // array에 적용
 }
