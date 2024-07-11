@@ -1,16 +1,14 @@
-const fs = require("fs");
-const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
-const input = fs.readFileSync(filePath).toString().trim().split("\n");
-//문자열 S 배열의 요소 갯수 구하기
-const [n] = input.shift().split(" ").map(Number);
+let fs = require("fs");
+let input = fs.readFileSync('/dev/stdin').toString().trim().split("\n");
+var [N,M] = input[0].split(" ").map(Number)
+input.shift();
 const strInput = input.map((i) => i.trim());
-const list = strInput.slice(0, n);
-const candidate = strInput.slice(n);
-const set = new Set(list);
-
-let ans = 0;
-candidate.forEach((str) => {
-  if (set.has(str)) ++ans;
-});
-
-console.log(ans);
+const list = strInput.slice(0,N)
+const Mlist = strInput.slice(N)
+const set = new Set(list)
+var answer = 0;
+for(let x of Mlist){
+    if(set.has(x))
+    answer ++;
+}
+console.log(answer)
