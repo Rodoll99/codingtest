@@ -1,112 +1,104 @@
-class Node {
-    next = undefined
-    prev = undefined
-    constructor(val) {
-        this.value = val
-    }
-}
+const fs = require("fs");
+const [N, ...input] = fs
+  .readFileSync("/dev/stdin")
+  .toString()
+  .trim()
+  .split("\n");
+const n = 1000000;
+let output = "";
 
-class Deque {
-    head = undefined
-    tail = undefined
-    size = 0
+const deque = new Array(n);
+let size = 0;
+let front = -1;
+let rear = -1;
 
-    insert(val, type) {
-        const curNode = new Node(val)
-        if(!this.size) {
-            if(!this.head) this.head = curNode
-            if(!this.tail) this.tail = curNode
-        } else {
-            if(type === 'front') {
-                this.head.prev = curNode
-                curNode.next = this.head
-                this.head = curNode            
-            } else if(type === 'back') {
-                this.tail.next = curNode
-                curNode.prev = this.tail
-                this.tail = curNode
-            }
-        }
-        
-        this.size += 1
+const addFirst = (e) => {
+  if (size === 0) {
+    front = 0;
+    rear = 0;
+  } else {
+    if (front === 0) {
+      front = n - 1;
+    } else {
+      front--;
     }
+  }
 
-    frontExtract() {
-        if(!this.head) return -1
-        const curVal = this.head.value
-        this.head = this.head.next
-        if(!this.head) this.tail = undefined
-        else {
-            this.head.prev = undefined   
-        }
-        this.size -= 1
-        return curVal 
-    }
+  deque[front] = e;
+  size++;
+};
 
-    backExtract() {
-        if(!this.tail) return -1
-        const curVal = this.tail.value
-        this.tail = this.tail.prev
-        if(!this.tail) this.head = undefined
-        else {
-            this.tail.next = undefined    
-        }
-        this.size -= 1
-        return curVal
+const addLast = (e) => {
+  if (size === 0) {
+    front = 0;
+    rear = 0;
+  } else {
+    if (rear === n - 1) {
+      rear = 0;
+    } else {
+      rear++;
     }
+  }
 
-    length() {
-        return this.size
-    }
+  deque[rear] = e;
+  size++;
+};
 
-    isEmpty() {
-        return !this.size ? 1 : 0
-    }
+const removeFirst = () => {
+  output += deque[front] + "\n";
+  size--;
+  if (front === n - 1) {
+    front = 0;
+  } else {
+    front++;
+  }
+};
 
-    printFront() {
-        if(!this.head) return -1
-        return this.head.value
-    }
+const removeLast = () => {
+  output += deque[rear] + "\n";
+  size--;
 
-    printBack() {
-        if(!this.tail) return -1
-        return this.tail.value
-    }
-}
-const input = require('fs').readFileSync('/dev/stdin').toString().trim().split("\n")
-const deque = new Deque()
-const result =  []
-input.shift()
-input.forEach(command => {
-    const [type, val] = command.split(" ")
-    switch(type) {
-        case '1':
-            deque.insert(Number(val), 'front')
-            break
-        case '2':
-            deque.insert(Number(val), 'back')
-            break
-        case '3':
-            result.push(deque.frontExtract())
-            break
-        case '4':
-            result.push(deque.backExtract())
-            break
-        case '5':
-            result.push(deque.length())
-            break
-        case '6':
-            result.push(deque.isEmpty())
-            break
-        case '7':
-            result.push(deque.printFront())
-            break
-        case '8':
-            result.push(deque.printBack())
-            break
-        default:
-            break
-    }
-})
+  if (rear === 0) {
+    rear = n - 1;
+  } else {
+    rear--;
+  }
+};
 
-console.log(result.join("\n"))
+input.forEach((e) => {
+  const [exe, num] = e.split(" ").map(Number);
+
+  if (exe === 1) {
+    addFirst(num);
+  }
+
+  if (exe === 2) {
+    addLast(num);
+  }
+
+  if (exe === 3) {
+    size === 0 ? (output += "-1\n") : removeFirst();
+  }
+
+  if (exe === 4) {
+    size === 0 ? (output += "-1\n") : removeLast();
+  }
+
+  if (exe === 5) {
+    output += size + "\n";
+  }
+
+  if (exe === 6) {
+    size === 0 ? (output += "1\n") : (output += "0\n");
+  }
+
+  if (exe === 7) {
+    size === 0 ? (output += "-1\n") : (output += deque[front] + "\n");
+  }
+
+  if (exe === 8) {
+    size === 0 ? (output += "-1\n") : (output += deque[rear] + "\n");
+  }
+});
+
+console.log(output);
